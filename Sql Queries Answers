@@ -1,0 +1,61 @@
+select * from walmart_data;
+
+select count(*) from walmart_date;
+
+update walmart_data  set total=round(total,1)  where total;
+
+select distinct count(payment_method),payment_method from walmart_data
+group by payment_method;
+
+select max(rating),category from walmart_data
+group by category;
+
+-- Q-1
+select count(payment_method) as no_of_paymant_method,round(sum(quantity),1) as no_of_quantity_sold,payment_method from walmart_data
+group by payment_method;
+
+select * from walmart_data;
+
+Q-2
+select round(avg(rating),1) as avg_rating,branch,category from walmart_data
+group by branch,category order by avg_rating desc;
+
+Q-3
+select dayname(date) as day,count(payment_method) as higest_transactions,branch from walmart_data
+group by branch,day order by higest_transactions desc;
+
+Q-4
+select payment_method,round(sum(quantity),1) as total_quantity from walmart_data
+group by payment_method;
+
+Q-5
+select category,city,round(avg(rating),1) as avg_rating,max(rating) as max_rating,min(rating) as min_rating from walmart_data
+group by category,city;
+
+
+Q-6
+select category,round(sum(total*profit_margin),1) as total_profit from walmart_data
+group by category;
+
+Q-7
+ select branch,count(payment_method) as total_payment_method,payment_method from walmart_data 
+ group by branch,payment_method order by total_payment_method desc;
+ 
+alter table walmart_data add column Timing_day varchar(50) ; 
+
+Q-8
+update walmart_data set timing_day=
+case 
+when time between 5 and 12 then "Morning" 
+when time between 12 and 17 then "after noon"
+when time between 17 and 20 then "Evening"
+when time between 20 and 12 then "Night"
+else 'no time'
+end
+where timing_day is null;
+
+Q-9
+select year(date),sum(`unit prices`*quantity) as revenue,lag(sum(`unit prices`*quantity)) over(order by branch desc) as previous_revenue,
+sum(`unit prices`*quantity)-lag(sum(`unit prices`*quantity)) over(order by branch desc) as diffrance_revenue
+from walmart_data where year(date)=2022 or year(date)=2023
+group by branch,date
